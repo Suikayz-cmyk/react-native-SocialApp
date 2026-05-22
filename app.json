@@ -1,29 +1,71 @@
 {
   "expo": {
     "name": "SocialApp",
-    "slug": "SocialApp",
+    "slug": "socialapp",
     "version": "1.0.0",
+
     "orientation": "portrait",
+
     "icon": "./assets/icon.png",
+
     "userInterfaceStyle": "light",
+
     "newArchEnabled": true,
+
+    "scheme": "socialapp",
+
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+
       "edgeToEdgeEnabled": true
     },
+
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "App ini membutuhkan akses kamera untuk membuat story"
+        }
+      ],
+
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "App ini membutuhkan akses galeri untuk upload foto"
+        }
+      ],
+
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "App ini membutuhkan akses lokasi"
+        }
+      ],
+
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "App ini membutuhkan akses media",
+          "savePhotosPermission": "App ingin menyimpan foto ke galeri"
+        }
+      ]
+    ]
   }
 }
