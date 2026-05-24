@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 const POSTS_FILE = FileSystem.documentDirectory + 'posts.json';
 

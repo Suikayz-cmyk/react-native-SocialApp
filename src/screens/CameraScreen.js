@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { CameraView, useCameraPermissions,} from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -89,6 +90,10 @@ export default function CameraScreen() {
     );
   };
 
+  const clearPhoto = () => {
+    setPhoto(null);
+  };
+
   // Permission 
   if (!permission?.granted) {
     return (
@@ -135,42 +140,75 @@ return (
           style={styles.controlButton}
           onPress={toggleCamera}
         >
-          <Text style={styles.buttonText}>
-            Flip
-          </Text>
+          <Ionicons
+            name='camera-reverse'
+            size={24}
+            color='#fff'
+          />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.captureButton}
           onPress={startCountdown}
         >
-          <Text style={styles.buttonText}>
-            Capture
-          </Text>
+          <View style={styles.captureInner} />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.controlButton}
           onPress={toggleFlash}
         >
-          <Text style={styles.buttonText}>
-            Flash
-          </Text>
+          <Ionicons
+            name={
+              flash === 'on'
+                ? 'flash'
+                : 'flash-off'
+            }
+            size={24}
+            color='#fff'
+          />
+
         </TouchableOpacity>
       </View>
 
       {/* Preview */}
       {photo && (
         <View style={styles.previewContainer}>
+          <View style={styles.previewHeader}>
+            <Text style={styles.previewTitle}>
+              Story Preview
+            </Text>
 
-          <Text style={styles.previewTitle}>
-            Story Preview
-          </Text>
+            <TouchableOpacity
+              onPress={clearPhoto}
+            >
+              <Ionicons
+                name='close-circle'
+                size={28}
+                color='#fff'
+              />
+            </TouchableOpacity>
+
+          </View>
 
           <Image
             source={{ uri: photo }}
             style={styles.previewImage}
           />
+
+          <TouchableOpacity
+            style={styles.retakeButton}
+            onPress={clearPhoto}
+          >
+            <Ionicons
+              name='camera'
+              size={20}
+              color='#fff'
+            />
+            <Text style={styles.buttonText}>
+              Retake
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -210,25 +248,37 @@ const styles = StyleSheet.create({
 
   controls: {
     position: 'absolute',
-    bottom: 260,
+    bottom: 40,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    paddingHorizontal: 30,
   },
 
   controlButton: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 10,
+    width: 58,
+    height: 58,
+    borderRadius: 30,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   captureButton: {
-    backgroundColor: '#ef4444',
-    paddingHorizontal: 28,
-    paddingVertical: 18,
+    width: 86,
+    height: 86,
     borderRadius: 50,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  captureInner: {
+    width: 70,
+    height: 70,
+    borderRadius: 40,
+    backgroundColor: '#ef4444',
   },
 
   buttonText: {
@@ -250,10 +300,19 @@ const styles = StyleSheet.create({
 
   previewContainer: {
     position: 'absolute',
-    bottom: 0,
-    width: '100%',
+    bottom: 130,
+    left: 16,
+    right: 16,
+    backgroundColor: 'rgba(15,23,42,0.95)',
+    borderRadius: 24,
     padding: 16,
-    backgroundColor: '#111',
+  },
+
+  previewHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 14,
   },
 
   previewTitle: {
@@ -265,7 +324,18 @@ const styles = StyleSheet.create({
 
   previewImage: {
     width: '100%',
-    height: 220,
-    borderRadius: 16,
+    height: 260,
+    borderRadius: 18,
+  },
+
+  retakeButton: {
+    marginTop: 16,
+    backgroundColor: '#2563eb',
+    borderRadius: 14,
+    padding: 14,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
   },
 });

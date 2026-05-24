@@ -7,11 +7,22 @@ import {
   TouchableOpacity,
   Alert,
   Platform,
+  ScrollView,
 } from 'react-native';
+
+import { Ionicons } from '@expo/vector-icons';
 
 import * as Notifications from 'expo-notifications';
 
 import * as Device from 'expo-device';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function HomeScreen() {
 
@@ -37,7 +48,6 @@ export default function HomeScreen() {
           await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-
       if (finalStatus !== 'granted') {
         Alert.alert(
           'Permission Ditolak',
@@ -45,7 +55,6 @@ export default function HomeScreen() {
         );
         return;
       }
-
       setNotificationPermission(true);
       console.log('Notification permission granted');
     } catch (error) {
@@ -65,25 +74,24 @@ export default function HomeScreen() {
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'New Message 📩',
-          body: 'Aryo mengirim pesan baru.',
+          title: 'SocialApp Notification',
+          body: 'Ini adalah notifikasi lokal dari SocialApp.',
+          sound: true,
           data: {
             screen: 'Home',
           },
-          sound: true,
         },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-          seconds: 5,
-          channelId: 'default',
-        },
+        trigger: null,
       });
       Alert.alert(
-        'Notification Scheduled',
-        'Notification akan muncul dalam 5 detik.'
+        'Success',
+        'Notification berhasil dikirim.'
       );
     } catch (error) {
-      console.log('Notification error:', error);
+      console.log(
+        'Notification error:',
+        error
+      );
     }
   };
 
@@ -136,14 +144,15 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
-
+    <ScrollView
+      contentContainerStyle={styles.container}
+    >
       <Text style={styles.title}>
-        SocialApp Notifications
+        SocialApp
       </Text>
 
       <Text style={styles.subtitle}>
-        Test local push notification feature
+        Mobile Native Features Integration
       </Text>
 
       <TouchableOpacity
@@ -155,10 +164,11 @@ export default function HomeScreen() {
         </Text>
       </TouchableOpacity>
 
+      {/* Permission Status */}
       <View style={styles.statusContainer}>
 
         <Text style={styles.statusText}>
-          Permission:
+          Notification Permission:
         </Text>
 
         <Text
@@ -179,18 +189,115 @@ export default function HomeScreen() {
 
       </View>
 
-    </View>
+      {/* Features */}
+      <View style={styles.featureContainer}>
+        <View style={styles.featureCard}>
+          <Ionicons
+            name='camera'
+            size={28}
+            color='#2563eb'
+          />
+
+          <Text style={styles.featureTitle}>
+            Camera Integration
+          </Text>
+
+        </View>
+
+        <View style={styles.featureCard}>
+          <Ionicons
+            name='images'
+            size={28}
+            color='#2563eb'
+          />
+          <Text style={styles.featureTitle}>
+            Gallery Upload
+          </Text>
+        </View>
+
+        <View style={styles.featureCard}>
+          <Ionicons
+            name='map'
+            size={28}
+            color='#2563eb'
+          />
+          <Text style={styles.featureTitle}>
+            Nearby Users Map
+          </Text>
+        </View>
+
+        <View style={styles.featureCard}>
+          <Ionicons
+            name='notifications'
+            size={28}
+            color='#2563eb'
+          />
+
+          <Text style={styles.featureTitle}>
+            Local Notification
+          </Text>
+        </View>
+
+        <View style={styles.featureCard}>
+          <Ionicons
+            name='folder'
+            size={28}
+            color='#2563eb'
+          />
+
+          <Text style={styles.featureTitle}>
+            Persistent Storage
+          </Text>
+        </View>
+
+        <View style={styles.featureCard}>
+          <Ionicons
+            name='link'
+            size={28}
+            color='#2563eb'
+          />
+
+          <Text style={styles.featureTitle}>
+            Deep Linking
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
 
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0f172a',
     padding: 24,
+  },
+
+  featureContainer: {
+    width: '100%',
+    marginTop: 40,
+    gap: 16,
+  },
+
+  featureCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+
+    backgroundColor: '#1e293b',
+
+    padding: 18,
+
+    borderRadius: 18,
+  },
+
+  featureTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 
   title: {

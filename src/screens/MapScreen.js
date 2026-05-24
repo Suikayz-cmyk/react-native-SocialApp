@@ -110,7 +110,6 @@ export default function MapScreen() {
               size='large'
               color='#2563eb'
             />
-
             <Text style={styles.loadingText}>
               Mengambil lokasi...
             </Text>
@@ -124,9 +123,7 @@ export default function MapScreen() {
     <View style={styles.container}>
       <MapView
         style={styles.map}
-
         showsUserLocation={true}
-
         region={{
           latitude: location.latitude,
           longitude: location.longitude,
@@ -149,14 +146,11 @@ export default function MapScreen() {
         {nearbyUsers.map((user) => (
           <Marker
             key={user.id}
-
             coordinate={{
               latitude: user.latitude,
               longitude: user.longitude,
             }}
-
             title={user.username}
-
             description='Nearby User'
           />
         ))}
@@ -167,16 +161,11 @@ export default function MapScreen() {
             latitude: location.latitude,
             longitude: location.longitude,
           }}
-
           radius={200}
-
           fillColor='rgba(37,99,235,0.15)'
-
           strokeColor='#2563eb'
-
           strokeWidth={2}
         />
-
       </MapView>
 
       {/* Top Info */}
@@ -188,9 +177,7 @@ export default function MapScreen() {
         <Text style={styles.infoSubtitle}>
           {nearbyUsers.length} users nearby
         </Text>
-
       </View>
-
     </View>
   );
 }

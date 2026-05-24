@@ -2,6 +2,7 @@
   "expo": {
     "name": "SocialApp",
     "slug": "socialapp",
+    "scheme": "socialapp",
     "version": "1.0.0",
 
     "orientation": "portrait",
@@ -11,8 +12,6 @@
     "userInterfaceStyle": "light",
 
     "newArchEnabled": true,
-
-    "scheme": "socialapp",
 
     "splash": {
       "image": "./assets/splash-icon.png",

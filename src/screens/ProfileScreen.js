@@ -10,6 +10,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -189,22 +190,42 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>
-        Create Post
-      </Text>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
 
-      {/* Button pilih gambar */}
+      {/* Header */}
+      <View style={styles.header}>
+        <Ionicons
+          name='images'
+          size={32}
+          color='#2563eb'
+        />
+
+        <Text style={styles.title}>
+          Create Post
+        </Text>
+      </View>
+
+      {/* Upload Button */}
       <TouchableOpacity
         style={styles.uploadButton}
         onPress={pickImage}
       >
+        <Ionicons
+          name='image'
+          size={22}
+          color='#fff'
+        />
+
         <Text style={styles.buttonText}>
           Choose From Gallery
         </Text>
       </TouchableOpacity>
 
-      {/* Preview gambar */}
+      {/* Preview */}
       {image && (
         <Image
           source={{ uri: image }}
@@ -215,19 +236,33 @@ export default function ProfileScreen() {
       {/* Caption */}
       <TextInput
         placeholder='Write a caption...'
-        placeholderTextColor='#999'
+        placeholderTextColor='#94a3b8'
         style={styles.input}
         value={caption}
         onChangeText={setCaption}
         multiline
       />
 
-      {/* Fake profile */}
+      {/* Preview Card */}
       {image && (
         <View style={styles.postCard}>
-          <Text style={styles.username}>
-            @aryo_yz
-          </Text>
+          <View style={styles.profileRow}>
+            <Ionicons
+              name='person-circle'
+              size={42}
+              color='#2563eb'
+            />
+
+            <View>
+              <Text style={styles.username}>
+                aryo_yz
+              </Text>
+
+              <Text style={styles.postTime}>
+                Just now
+              </Text>
+            </View>
+          </View>
 
           <Image
             source={{ uri: image }}
@@ -238,82 +273,133 @@ export default function ProfileScreen() {
             {caption || 'No caption'}
           </Text>
 
-          <Text style={styles.likes}>
-            ❤️ 128 likes
-          </Text>
+          <View style={styles.likeRow}>
+            <Ionicons
+              name='heart'
+              size={18}
+              color='#ef4444'
+            />
+
+            <Text style={styles.likes}>
+              128 likes
+            </Text>
+          </View>
         </View>
       )}
 
-      {/* Actions */}
+      {/* Action Buttons */}
       {image && (
-        <View style={styles.actionContainer}>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={saveToGallery}
-          >
-            <Text style={styles.buttonText}>
-              Save
-            </Text>
-          </TouchableOpacity>
+        <>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={saveToGallery}
+            >
 
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={sharePost}
-          >
-            <Text style={styles.buttonText}>
-              Share
-            </Text>
-          </TouchableOpacity>
+              <Ionicons
+                name='download'
+                size={20}
+                color='#fff'
+              />
 
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={saveCurrentPost}
-          >
-            <Text style={styles.buttonText}>
-              Save Post
-            </Text>
-          </TouchableOpacity>
+              <Text style={styles.buttonText}>
+                Save
+              </Text>
 
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={async () => {
+            </TouchableOpacity>
 
-              await deletePosts();
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={sharePost}
+            >
 
-              setSavedPosts([]);
+              <Ionicons
+                name='share-social'
+                size={20}
+                color='#fff'
+              />
+              <Text style={styles.buttonText}>
+                Share
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-              Alert.alert(
-                'Deleted',
-                'Semua post berhasil dihapus.'
-              );
-            }}
-          >
-            <Text style={styles.buttonText}>
-              Delete All Posts
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={saveCurrentPost}
+            >
+
+              <Ionicons
+                name='folder'
+                size={20}
+                color='#fff'
+              />
+
+              <Text style={styles.buttonText}>
+                Save Post
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={async () => {
+                await deletePosts();
+                setSavedPosts([]);
+                Alert.alert(
+                  'Deleted',
+                  'Semua post berhasil dihapus.'
+                );
+              }}
+            >
+              <Ionicons
+                name='trash'
+                size={20}
+                color='#fff'
+              />
+
+              <Text style={styles.buttonText}>
+                Delete All
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
       )}
-      <Text style={styles.savedTitle}>
-        Saved Posts
-      </Text>
+
+      {/* Saved Posts */}
+      <View style={styles.savedHeader}>
+        <Ionicons
+          name='folder-open'
+          size={26}
+          color='#2563eb'
+        />
+
+        <Text style={styles.savedTitle}>
+          Saved Posts
+        </Text>
+      </View>
 
       {savedPosts.map((post) => (
-
         <View
           key={post.id}
           style={styles.savedPostCard}
         >
-
           <Image
             source={{ uri: post.image }}
             style={styles.savedPostImage}
           />
 
-          <Text style={styles.savedCaption}>
-            {post.caption || 'No caption'}
-          </Text>
+          <View style={styles.savedPostContent}>
+            <Text style={styles.savedCaption}>
+              {post.caption || 'No caption'}
+            </Text>
 
+            <Text style={styles.savedDate}>
+              {new Date(
+                post.createdAt
+              ).toLocaleDateString()}
+            </Text>
+          </View>
         </View>
       ))}
     </ScrollView>
@@ -336,9 +422,12 @@ const styles = StyleSheet.create({
 
   uploadButton: {
     backgroundColor: '#2563eb',
-    padding: 14,
-    borderRadius: 12,
+    padding: 16,
+    borderRadius: 18,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
+    gap: 10,
     marginBottom: 20,
   },
 
@@ -393,11 +482,21 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
   },
 
+  actionButton: {
+    flex: 1,
+    backgroundColor: '#2563eb',
+    padding: 14,
+    borderRadius: 14,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+  },
+
   actionContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     gap: 12,
-    marginBottom: 40,
+    marginBottom: 14,
   },
 
   actionButton: {
@@ -409,11 +508,14 @@ const styles = StyleSheet.create({
   },
 
   deleteButton: {
+    flex: 1,
     backgroundColor: '#dc2626',
     padding: 14,
-    borderRadius: 12,
+    borderRadius: 14,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
+    gap: 8,
   },
 
   savedTitle: {
@@ -439,5 +541,54 @@ const styles = StyleSheet.create({
 
   savedCaption: {
     color: '#fff',
+  },
+
+  content: {
+    padding: 20,
+    paddingBottom: 50,
+  },
+
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 24,
+  },
+
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 14,
+  },
+
+  postTime: {
+    color: '#94a3b8',
+    fontSize: 13,
+  },
+
+  likeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 10,
+  },
+
+  savedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20,
+    marginTop: 10,
+  },
+
+  savedPostContent: {
+    marginTop: 10,
+  },
+
+  savedDate: {
+    color: '#94a3b8',
+    marginTop: 6,
+    fontSize: 12,
   },
 });
