@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   View,
@@ -16,10 +16,13 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
 
+import { savePosts, loadPosts, deletePosts,} from '../utils/fileSystem';
+
 export default function ProfileScreen() {
 
   const [image, setImage] = useState(null);
   const [caption, setCaption] = useState('');
+  const [savedPosts, setSavedPosts] = useState([]);
 
   // Pilih foto dari galeri
   const pickImage = async () => {
@@ -143,6 +146,48 @@ export default function ProfileScreen() {
     }
   };
 
+  const saveCurrentPost = async () => {
+    if (!image) {
+      Alert.alert(
+        'Tidak Ada Post',
+        'Pilih gambar terlebih dahulu.'
+      );
+      return;
+    }
+
+    try {
+      const newPost = {
+        id: Date.now(),
+        image,
+        caption,
+        createdAt: new Date().toISOString(),
+      };
+
+      const updatedPosts = [
+        newPost,
+        ...savedPosts,
+      ];
+
+      setSavedPosts(updatedPosts);
+      await savePosts(updatedPosts);
+      Alert.alert(
+        'Berhasil',
+        'Post berhasil disimpan ke local storage.'
+      );
+    } catch (error) {
+      console.log('Save current post error:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    const posts = await loadPosts();
+    setSavedPosts(posts);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>
@@ -219,14 +264,63 @@ export default function ProfileScreen() {
               Share
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={saveCurrentPost}
+          >
+            <Text style={styles.buttonText}>
+              Save Post
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={async () => {
+
+              await deletePosts();
+
+              setSavedPosts([]);
+
+              Alert.alert(
+                'Deleted',
+                'Semua post berhasil dihapus.'
+              );
+            }}
+          >
+            <Text style={styles.buttonText}>
+              Delete All Posts
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
+      <Text style={styles.savedTitle}>
+        Saved Posts
+      </Text>
+
+      {savedPosts.map((post) => (
+
+        <View
+          key={post.id}
+          style={styles.savedPostCard}
+        >
+
+          <Image
+            source={{ uri: post.image }}
+            style={styles.savedPostImage}
+          />
+
+          <Text style={styles.savedCaption}>
+            {post.caption || 'No caption'}
+          </Text>
+
+        </View>
+      ))}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: '#0f172a',
@@ -312,5 +406,38 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 12,
     alignItems: 'center',
+  },
+
+  deleteButton: {
+    backgroundColor: '#dc2626',
+    padding: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+
+  savedTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+
+  savedPostCard: {
+    backgroundColor: '#1e293b',
+    borderRadius: 18,
+    padding: 12,
+    marginBottom: 20,
+  },
+
+  savedPostImage: {
+    width: '100%',
+    height: 220,
+    borderRadius: 14,
+    marginBottom: 10,
+  },
+
+  savedCaption: {
+    color: '#fff',
   },
 });
